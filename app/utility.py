@@ -2,8 +2,6 @@ import re
 import math
 
 def generate_custom_id(lastId:str|None, initials:str) -> str:
-    print({"lastId":lastId})
-    print({"initials":initials})
     if lastId and re.match(initials+r"\d+", lastId):
         initialsLen = len(initials)
         last_number = int(lastId[initialsLen:])

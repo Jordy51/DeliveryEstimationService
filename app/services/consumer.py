@@ -42,7 +42,6 @@ class ConsumerService:
             latitude=consumer.latitude,
             longitude=consumer.longitude,
         )
-        print(db_consumer)
         self.db.add(db_consumer)
         self.db.commit()
         self.db.refresh(db_consumer)

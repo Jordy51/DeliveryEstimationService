@@ -5,13 +5,9 @@ from app.schemas.estimation import GetEstimationRequest, GetEstimationResponse
 
 router = APIRouter(prefix="/estimation", tags=["estimation"])
 
-
-@router.get("/")
-# TODO add get list of consumer and estimation
-def get_items():
-    return
+estimationService = EstimationService()
 
 
 @router.post("/", response_model=GetEstimationResponse)
 def get_estimation(data: GetEstimationRequest):
-    return EstimationService().get_estimation(data)
+    return estimationService.get_estimation(data)

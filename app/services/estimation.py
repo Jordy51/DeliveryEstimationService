@@ -23,8 +23,8 @@ class EstimationService:
 
         return valid_sequences
 
-    @staticmethod
-    def compute_total_time(
+    def _compute_total_time(
+        self,
         order_routes,
         delivery_partner_location,
         restaurant_locations,
@@ -57,11 +57,9 @@ class EstimationService:
 
         return total_time
 
-    def get_estimation(self, data: GetEstimationRequest):
-        restaurant_locations = {}
-        consumer_locations = {}
-        restaurant_prep_times = {}
-        for order in data.orders:
+    def _fetch_location_and_prep_times(self, orders: list[OrderDetails]):
+        restaurant_locations, consumer_locations, restaurant_prep_times = {}, {}, {}
+        for order in orders:
             restaurant_locations[order.restaurantId] = (
                 self.restaurantService.get_restaurant_location(order.restaurantId)
             )
@@ -73,13 +71,22 @@ class EstimationService:
             consumer_locations[order.consumerId] = (
                 self.consumerService.get_consumer_location(order.consumerId)
             )
-        order_routes = EstimationService.valid_order_sequences(data.orders)
+        return restaurant_locations, consumer_locations, restaurant_prep_times
+
+    def _find_optimal_route(
+        self,
+        order_routes: list[list[str]],
+        delivery_exec_location,
+        restaurant_locations: dict,
+        consumer_locations: dict,
+        restaurant_prep_times: dict,
+    ):
         route_time = [
             (
                 route,
-                EstimationService.compute_total_time(
+                self._compute_total_time(
                     order_routes=route,
-                    delivery_partner_location=data.deliveryExecLocation,
+                    delivery_partner_location=delivery_exec_location,
                     restaurant_locations=restaurant_locations,
                     consumer_locations=consumer_locations,
                     restaurant_prep_times=restaurant_prep_times,
@@ -87,9 +94,22 @@ class EstimationService:
             )
             for route in order_routes
         ]
-        result = min(route_time, key=lambda x: x[1])
-        print({"result": result})
+        return min(route_time, key=lambda x: x[1])
+
+    def get_estimation(self, data: GetEstimationRequest):
+        restaurant_locations, consumer_locations, restaurant_prep_times = (
+            self._fetch_location_and_prep_times(data.orders)
+        )
+
+        order_routes = self.valid_order_sequences(data.orders)
+        optima_route, estimated_time = self._find_optimal_route(
+            order_routes=order_routes,
+            delivery_exec_location=data.deliveryExecLocation,
+            restaurant_locations=restaurant_locations,
+            consumer_locations=consumer_locations,
+            restaurant_prep_times=restaurant_prep_times,
+        )
         return GetEstimationResponse(
-            optimalRoute=result[0],
-            estimatedTime=format_time(result[1]),
+            optimalRoute=optima_route,
+            estimatedTime=format_time(estimated_time),
         )
