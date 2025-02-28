@@ -1,0 +1,12 @@
+{
+    "deliveryExecLocation": {"latitude": 12.9352, "longitude": 77.6245},
+    "orders": [
+        {"restaurantId": "R1", "consumerId": "C1"},
+        {"restaurantId": "R2", "consumerId": "C2"},
+        {"restaurantId": "R3", "consumerId": "C3"},
+    ],
+}
+
+
+//Result
+{"optimalRoute":["R1","R3","R2","C1","C2","C3"],"estimatedTime":"27m"}
