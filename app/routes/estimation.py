@@ -3,7 +3,7 @@ from app.services.estimation import EstimationService
 from app.schemas.estimation import GetEstimationRequest, GetEstimationResponse
 
 
-router = APIRouter(prefix="/estimation", tags=["estimation"])
+router = APIRouter(prefix="/optimal-route", tags=["estimation"])
 
 estimationService = EstimationService()
 

@@ -30,9 +30,9 @@ The Delivery Estimation Service is a FastAPI-based application designed to calcu
     ```
 
 3. **Install Dependencies:**
-   Ensure you have Python installed, then install the required packages:
+   Ensure you have Docker installed, then run:
     ```bash
-    pip install -r requirements.txt
+    docker compose up
     ```
 
 ## Usage
@@ -49,43 +49,148 @@ This will launch the API on `http://127.0.0.1:8000/`.
 
 ### API Endpoints
 
-#### 1. Calculate Distance
+#### 1. Find Optimal Route
 
--   **Endpoint:** `GET /distance`
--   **Description:** Calculates the Haversine distance between two locations.
--   **Query Parameters:**
-    -   `lat1` (float): Latitude of the first location
-    -   `lon1` (float): Longitude of the first location
-    -   `lat2` (float): Latitude of the second location
-    -   `lon2` (float): Longitude of the second location
--   **Example Request:**
-    ```bash
-    curl "http://127.0.0.1:8000/distance?lat1=40.7128&lon1=-74.0060&lat2=34.0522&lon2=-118.2437"
-    ```
--   **Example Response:**
+-   **Endpoint:** `POST /optimal-route`
+-   **Description:** Returns the optimal route for delivery between orders and estimated time.
+-   **Request Parameters:**
+
+    -   `name` (string): Restaurant name
+    -   `latitude` (float): Latitude of the consumer
+    -   `longitude` (float): Longitude of the consumer
+
+-   **Example Request Body:**
+
     ```json
     {
-    	"distance_km": 3940.07
+    	"deliveryExecLocation": {
+    		"latitude": 12.9352,
+    		"longitude": 77.6245
+    	},
+    	"orders": [
+    		{
+    			"restaurantId": "R3",
+    			"consumerId": "C2"
+    		},
+    		{
+    			"restaurantId": "R4",
+    			"consumerId": "C6"
+    		},
+    		{
+    			"restaurantId": "R5",
+    			"consumerId": "C5"
+    		}
+    	]
     }
     ```
 
-#### 2. Find Optimal Route
-
--   **Endpoint:** `GET /optimal-route`
--   **Description:** Returns the optimal route for delivery between two locations.
--   **Query Parameters:**
-    -   `start` (string): Name or coordinates of the starting location
-    -   `end` (string): Name or coordinates of the destination
--   **Example Request:**
-    ```bash
-    curl "http://127.0.0.1:8000/optimal-route?start=New York&end=Los Angeles"
     ```
+
+    ```
+
 -   **Example Response:**
     ```json
     {
-    	"route": ["New York", "Chicago", "Denver", "Las Vegas", "Los Angeles"],
-    	"total_distance_km": 4500.5
+    	"optimalRoute": ["R5", "R3", "C2", "C5", "R4", "C6"],
+    	"estimatedTime": "2h 6m"
     }
+    ```
+
+#### 2. Create Restaurant
+
+-   **Endpoint:** `POST /restaurant`
+-   **Description:** Create restaurant and store location & preparation time data
+-   **Query Parameters:**
+
+    -   `name` (string): Restaurant name
+    -   `latitude` (float): Latitude of the restaurant
+    -   `longitude` (float): Longitude of the restaurant
+    -   `avgPreparationTime` (int): Average preparation time of the restaurant in minutes
+
+-   **Example Request Body:**
+
+    ```json
+    {
+    	"name": "McD",
+    	"latitude": 12.963,
+    	"longitude": 77.648,
+    	"avgPreparationTime": 55
+    }
+    ```
+
+-   **Example Response:**
+    ```json
+    {
+    	"name": "McD",
+    	"latitude": 12.963,
+    	"longitude": 77.648,
+    	"avgPreparationTime": 55,
+    	"id": "R7"
+    }
+    ```
+
+#### 3. Get Restaurants
+
+-   **Endpoint:** `GET /restaurant`
+-   **Description:** List restaurants
+-   **Example Request:**
+    ```bash
+    curl "http://127.0.0.1:8000/restaurant
+    ```
+-   **Example Response:**
+
+    ```json
+    [
+    	{ "id": "R1", "name": "Bakery" },
+    	{ "id": "R7", "name": "McD" }
+    ]
+    ```
+
+#### 4. Create Consumer
+
+-   **Endpoint:** `POST /consumer`
+-   **Description:** Create consumer and store location data
+-   **Request Parameters:**
+
+    -   `name` (string): Restaurant name
+    -   `latitude` (float): Latitude of the consumer
+    -   `longitude` (float): Longitude of the consumer
+
+-   **Example Request Body:**
+
+    ```json
+    {
+    	"name": "Aditya",
+    	"latitude": 12.941,
+    	"longitude": 77.425
+    }
+    ```
+
+-   **Example Response:**
+    ```json
+    {
+    	"name": "Aditya",
+    	"latitude": 12.941,
+    	"longitude": 77.425,
+    	"id": "C7"
+    }
+    ```
+
+#### 5. Get Consumers
+
+-   **Endpoint:** `GET /consumer`
+-   **Description:** List consumers
+-   **Example Request:**
+    ```bash
+    curl "http://127.0.0.1:8000/consumer
+    ```
+-   **Example Response:**
+
+    ```json
+    [
+    	{ "id": "C1", "name": "Aman" },
+    	{ "id": "C7", "name": "Aditya" }
+    ]
     ```
 
 ### API Documentation
@@ -94,23 +199,3 @@ FastAPI provides automatic interactive documentation at:
 
 -   Swagger UI: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 -   Redoc UI: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
-
-## Testing
-
-A `test_and_result.txt` file is provided to showcase test cases and expected outcomes. Run tests using:
-
-```bash
-pytest tests/
-```
-
-## Contributing
-
-Contributions are welcome! Please fork the repository and submit a pull request for any enhancements or bug fixes.
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for more details.
-
----
-
-_Note: This README is based on the project's structure and standard practices. For specific details, refer to the actual implementation._
