@@ -1,5 +1,6 @@
-from sqlalchemy import Column, String, Float,Integer
+from sqlalchemy import Column, String, Float, Integer
 from app.database import Base
+
 
 class Restaurant(Base):
     __tablename__ = "Restaurants"

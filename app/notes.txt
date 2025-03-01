@@ -1,3 +1,0 @@
-we can store lat long as geo-locations data format in db
-
-at end try to optimize by not traversing all the paths

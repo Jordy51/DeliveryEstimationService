@@ -1,6 +1,7 @@
 from sqlalchemy import Column, String, Float
 from app.database import Base
 
+
 class Consumer(Base):
     __tablename__ = "Consumers"
 
