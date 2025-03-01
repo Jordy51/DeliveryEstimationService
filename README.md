@@ -5,7 +5,7 @@ The Delivery Estimation Service is a FastAPI-based application designed to calcu
 ## Features
 
 -   **FastAPI Backend:** Provides a RESTful API for estimating delivery distances.
--   **Haversine Distance Calculation:** Uses the Haversine formula to determine the shortest path between two geographical points.
+-   **Haversine Distance Calculation:** Uses the Haversine formula to determine the shortest path between two geographical points with an average speed of 20km/hr.
 -   **Optimal Route Estimation:** Computes the most efficient delivery route based on distance calculations.
 -   **Interactive API Docs:** Automatically generated API documentation available via Swagger UI and ReDoc.
 
