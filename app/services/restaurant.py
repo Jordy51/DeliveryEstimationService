@@ -4,6 +4,7 @@ from app.database import SessionLocal
 from ..utility import generate_custom_id
 from sqlalchemy.sql import func
 from sqlalchemy import Integer
+from typing import Optional, Dict
 
 
 class RestaurantService:
@@ -62,7 +63,9 @@ class RestaurantService:
             }
         return None
 
-    def get_restaurant_preparation_time(self, restaurant_id: str):
+    def get_restaurant_preparation_time(
+        self, restaurant_id: str
+    ) -> Optional[Dict[str, int]]:
         restaurant = (
             self.db.query(Restaurant).filter(Restaurant.id == restaurant_id).first()
         )
