@@ -26,15 +26,15 @@ class EstimationService:
     def _compute_total_time(
         self,
         order_routes,
-        delivery_partner_location,
+        delivery_exec_location,
         restaurant_locations,
         consumer_locations,
         restaurant_prep_times,
     ):
         total_time = 0
         current_loc = {
-            "latitude": delivery_partner_location.latitude,
-            "longitude": delivery_partner_location.longitude,
+            "latitude": delivery_exec_location.latitude,
+            "longitude": delivery_exec_location.longitude,
         }
         for stop in order_routes:
             next_position = restaurant_locations.get(stop, consumer_locations.get(stop))
@@ -86,7 +86,7 @@ class EstimationService:
                 route,
                 self._compute_total_time(
                     order_routes=route,
-                    delivery_partner_location=delivery_exec_location,
+                    delivery_exec_location=delivery_exec_location,
                     restaurant_locations=restaurant_locations,
                     consumer_locations=consumer_locations,
                     restaurant_prep_times=restaurant_prep_times,
