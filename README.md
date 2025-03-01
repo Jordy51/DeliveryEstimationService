@@ -1,66 +1,60 @@
 # Delivery Estimation Service
 
-The Delivery Estimation Service is a FastAPI-based application designed to calculate the optimal delivery route between two locations using the Haversine formula. This API provides real-time delivery estimations by computing the shortest distance over the Earth's surface.
+The Delivery Estimation Service is a FastAPI-based application designed to calculate the optimal delivery route between multiple locations using the Haversine formula. This API provides real-time delivery estimations by computing the shortest distance over the Earth's surface.
 
 ## Features
 
--   **FastAPI Backend:** Provides a RESTful API to estimate delivery distances.
+-   **FastAPI Backend:** Provides a RESTful API for estimating delivery distances.
 -   **Haversine Distance Calculation:** Uses the Haversine formula to determine the shortest path between two geographical points.
--   **Optimal Route Estimation:** Calculates the most efficient delivery route based on computed distances.
--   **Interactive API Docs:** Automatically generated API documentation available via Swagger UI.
+-   **Optimal Route Estimation:** Computes the most efficient delivery route based on distance calculations.
+-   **Interactive API Docs:** Automatically generated API documentation available via Swagger UI and ReDoc.
 
 ## Assumptions
 
--   **Spherical Earth Model:** Assumes Earth is a perfect sphere for distance calculations, which may introduce minor inaccuracies due to Earth's ellipsoidal shape.
--   **Direct Path:** Considers a direct path between two points without accounting for real-world obstacles like buildings or terrain.
--   **Static Locations:** Assumes fixed coordinates for delivery points without considering dynamic factors such as moving vehicles or temporary restrictions.
+-   **Spherical Earth Model:** Assumes the Earth is a perfect sphere, leading to minor inaccuracies due to its ellipsoidal shape.
+-   **Direct Path:** Considers a direct path between two points without factoring in obstacles such as buildings or terrain.
+-   **Static Locations:** Uses fixed coordinates for delivery points, without accounting for dynamic factors like traffic or road closures.
 
 ## Installation
 
-1. **Clone the Repository:**
+### Prerequisites
 
+-   Ensure Docker is installed on your system.
+
+### Steps
+
+1. **Clone the Repository:**
     ```bash
     git clone https://github.com/Jordy51/DeliveryEstimationService.git
     ```
-
 2. **Navigate to the Project Directory:**
-
     ```bash
     cd DeliveryEstimationService
     ```
-
-3. **Install Dependencies:**
-   Ensure you have Docker installed, then run:
+3. **Start the Service with Docker:**
     ```bash
     docker compose up
     ```
 
 ## Usage
 
-### Running the API Server
+### Running the API Server (Without Docker)
 
-Start the FastAPI server by executing:
+If you prefer to run the FastAPI server manually:
 
 ```bash
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-This will launch the API on `http://127.0.0.1:8000/`.
+The API will be available at `http://127.0.0.1:8000/`.
 
 ### API Endpoints
 
 #### 1. Find Optimal Route
 
 -   **Endpoint:** `POST /optimal-route`
--   **Description:** Returns the optimal route for delivery between orders and estimated time.
--   **Request Parameters:**
-
-    -   `name` (string): Restaurant name
-    -   `latitude` (float): Latitude of the consumer
-    -   `longitude` (float): Longitude of the consumer
-
--   **Example Request Body:**
-
+-   **Description:** Determines the optimal delivery route and estimated delivery time.
+-   **Request Body:**
     ```json
     {
     	"deliveryExecLocation": {
@@ -68,26 +62,12 @@ This will launch the API on `http://127.0.0.1:8000/`.
     		"longitude": 77.6245
     	},
     	"orders": [
-    		{
-    			"restaurantId": "R3",
-    			"consumerId": "C2"
-    		},
-    		{
-    			"restaurantId": "R4",
-    			"consumerId": "C6"
-    		},
-    		{
-    			"restaurantId": "R5",
-    			"consumerId": "C5"
-    		}
+    		{ "restaurantId": "R3", "consumerId": "C2" },
+    		{ "restaurantId": "R4", "consumerId": "C6" },
+    		{ "restaurantId": "R5", "consumerId": "C5" }
     	]
     }
     ```
-
-    ```
-
-    ```
-
 -   **Example Response:**
     ```json
     {
@@ -99,16 +79,8 @@ This will launch the API on `http://127.0.0.1:8000/`.
 #### 2. Create Restaurant
 
 -   **Endpoint:** `POST /restaurant`
--   **Description:** Create restaurant and store location & preparation time data
--   **Query Parameters:**
-
-    -   `name` (string): Restaurant name
-    -   `latitude` (float): Latitude of the restaurant
-    -   `longitude` (float): Longitude of the restaurant
-    -   `avgPreparationTime` (int): Average preparation time of the restaurant in minutes
-
--   **Example Request Body:**
-
+-   **Description:** Registers a new restaurant with location and preparation time data.
+-   **Request Body:**
     ```json
     {
     	"name": "McD",
@@ -117,7 +89,6 @@ This will launch the API on `http://127.0.0.1:8000/`.
     	"avgPreparationTime": 55
     }
     ```
-
 -   **Example Response:**
     ```json
     {
@@ -132,13 +103,12 @@ This will launch the API on `http://127.0.0.1:8000/`.
 #### 3. Get Restaurants
 
 -   **Endpoint:** `GET /restaurant`
--   **Description:** List restaurants
+-   **Description:** Retrieves a list of registered restaurants.
 -   **Example Request:**
     ```bash
-    curl "http://127.0.0.1:8000/restaurant
+    curl "http://127.0.0.1:8000/restaurant"
     ```
 -   **Example Response:**
-
     ```json
     [
     	{ "id": "R1", "name": "Bakery" },
@@ -149,15 +119,8 @@ This will launch the API on `http://127.0.0.1:8000/`.
 #### 4. Create Consumer
 
 -   **Endpoint:** `POST /consumer`
--   **Description:** Create consumer and store location data
--   **Request Parameters:**
-
-    -   `name` (string): Restaurant name
-    -   `latitude` (float): Latitude of the consumer
-    -   `longitude` (float): Longitude of the consumer
-
--   **Example Request Body:**
-
+-   **Description:** Registers a new consumer with location data.
+-   **Request Body:**
     ```json
     {
     	"name": "Aditya",
@@ -165,7 +128,6 @@ This will launch the API on `http://127.0.0.1:8000/`.
     	"longitude": 77.425
     }
     ```
-
 -   **Example Response:**
     ```json
     {
@@ -179,13 +141,12 @@ This will launch the API on `http://127.0.0.1:8000/`.
 #### 5. Get Consumers
 
 -   **Endpoint:** `GET /consumer`
--   **Description:** List consumers
+-   **Description:** Retrieves a list of registered consumers.
 -   **Example Request:**
     ```bash
-    curl "http://127.0.0.1:8000/consumer
+    curl "http://127.0.0.1:8000/consumer"
     ```
 -   **Example Response:**
-
     ```json
     [
     	{ "id": "C1", "name": "Aman" },
@@ -197,5 +158,5 @@ This will launch the API on `http://127.0.0.1:8000/`.
 
 FastAPI provides automatic interactive documentation at:
 
--   Swagger UI: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
--   Redoc UI: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
+-   **Swagger UI:** [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+-   **ReDoc UI:** [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
